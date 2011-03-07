@@ -1,0 +1,28 @@
+-se_namespace($obj->klass . ' superform')
+-if(!$obj->is_valid)
+  -if(p('__scrollpos'))
+    -$params['__scrollpos'] = 0
+  =error_messages_for($obj)
+=form_for($obj, $obj->superform_action, "", false)
+%input{:type=>'hidden', :name=>'__scrollpos', :id=>'__scrollpos', :value=>p('__scrollpos')}
+:js
+  $(function() {
+    $(window).scroll( function() {
+      $('#__scrollpos').val($(window).scrollTop());
+    });
+  });
+%input{:type=>'hidden', :name=>'superform_cmd', :value=>$obj->superform_cmd}
+%table.superform
+  -foreach($sections as $section_name=>$fields)
+    -if(!isset($vars)) $vars=array()
+    -if(count($fields)==0) continue
+    -event('superform_section', array('section_name'=>$section_name, 'fields'=>$fields, 'obj'=>$obj, 'vars'=>$vars))
+  -$k = strtolower(spacify($obj->klass, '_'))
+  -event("superform_{$k}_sections", array('obj'=>$obj))
+  -event("superform_{$k}_custom_sections", array('obj'=>$obj))
+  %tr.submit
+    %td
+    %td
+      =submit_tag('Save');
+=end_form_for()
+-se_namespace()

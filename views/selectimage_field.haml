@@ -1,0 +1,39 @@
+:css
+  .selectimage img { border: 10px solid #e5e5e5; margin: 5px }
+  .selectimage .hover { border: 10px solid #F9F465}
+  .selectimage .selected {border: 10px solid #D65F16 }
+.selectimage{:id=>$id.'_container'}
+  =hidden_field($field, 'id', $id);
+:js
+  $(function() {
+    <? foreach($data['item_array'] as $item): ?>
+      img = $('<img>');
+      img.attr('src','<?=j(magick_img_url($data['image_size'], $item->$data['display_field']->vpath))?>');
+      img.data('value', '<?=j($item->$data['value_field'])?>');
+      <? if($obj->$field == $item->id): ?> 
+        img.addClass('selected');
+      <? endif; ?>
+      $('#<?=$id?>_container').append(img);
+    <? endforeach; ?>
+    $('#<?=$id?>_container img').each( function()
+    {
+      e = $(this);
+      e.mouseenter( function() {
+        e = $(this);
+        if (e.hasClass('selected')) return;
+        e.addClass('hover');
+      });
+      e.mouseleave( function() {
+        e = $(this);
+        e.removeClass('hover');
+      });
+      e.click( function() {
+        e = $(this);
+        e.parent().children('img').each(function() {
+          $(this).removeClass('selected');
+        });
+        e.addClass('selected');
+        $('#<?=$id?>').val(e.data('value'));
+      });
+    });
+  });

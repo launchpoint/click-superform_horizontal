@@ -1,0 +1,9 @@
+[
+%span.clickable{:id=>$id."_help_button"} ?
+]
+:js
+  $(document).ready( function() {
+    $('#<?=$id?>_help_button').click( function() {
+      $('#<?=$id?>_help_content').toggle();
+    });
+  });

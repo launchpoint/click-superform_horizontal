@@ -1,0 +1,17 @@
+-if(!is_bool($data['help']) && !is_array($data['help'])) click_error("Help directive must be true/false or a title/body/img array")
+-se_namespace($field . ' help')
+.form_help{:id=>$id."_help_content", :style=>'display:none'}
+  .title
+    -if(isset($data['help']['title']))
+      =se($data['help']['title'])
+    -else
+      =se('Help')
+  .body
+    -if(isset($data['help']['body']))
+      =se($data['help']['body'])
+    -else
+      =se('Discussion.')
+    -if(isset($data['help']['img']))
+      %br
+      %img{:src=>magick_img_url('medium', $data['help']['img'])}
+-se_namespace()

@@ -1,0 +1,25 @@
+=select_field($field, $options, $data['value_field'], $data['display_field'], 'id', $id)
+:js
+  $(document).ready( function() {
+    e = $('#<?=$id?>');
+    <? if(!$data['enabled']):?>
+      e.attr('disabled', true); 
+    <? endif; ?>
+    <? if($data['autopostback']): ?>
+      e.change( function() {
+        e = $('#<?=$id?>');
+        val = e.val();
+        if (val == '__superform_new_item__') return false;
+        var form = $(this).parents('form:first');
+        $("input[name='superform_cmd']", form).val('refresh');
+        form.submit();
+      });
+    <? endif; ?>
+    <? if(isset($data['add_url'])): ?>
+      e.change( function() {
+        e = $('#<?=$id?>');
+        val = e.val();
+        if (val != '__superform_new_item__') return false;
+      });
+    <? endif; ?>
+  });

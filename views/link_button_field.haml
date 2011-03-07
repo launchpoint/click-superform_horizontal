@@ -1,0 +1,12 @@
+=hidden_field($field, 'id', $id, 'value', 0)
+%button{:id=>'button_'.$id} =se($field."_button")
+:js
+  $(function() {
+    e = $('#button_<?=$id?>').click( function()
+    {
+      $('#<?=$id?>').val(1);
+      var form = $(this).parents('form:first');
+      $("input[name='superform_cmd']", form).val('refresh');
+      form.submit();
+    });
+  });

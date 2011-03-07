@@ -1,0 +1,10 @@
+=text_field($field, 'class', 'superform_color_picker', 'id', $id)
+:js
+  $(document).ready( function() {
+    e=$('#<?=$id?>');
+    v = e.val();
+    if(v!='')
+    {
+      e.css('backgroundColor', '#' + v);
+    }
+  });

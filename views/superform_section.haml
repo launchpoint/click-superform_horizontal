@@ -1,0 +1,55 @@
+-se_namespace($section_name)
+-$current_indent = isset($indent) ? $indent : 0
+%tr.title
+  %th{:colspan=>2}.title
+    -for($i=0;$i<$current_indent;$i++)
+      &nbsp;
+    =se(humanize($section_name))
+%tr.instructions
+  %th{:colspan=>2}.instructions
+    -for($i=0;$i<$current_indent;$i++)
+      &nbsp;
+    =se(humanize($section_name)." instructions")
+-foreach($fields as $field=>$data)
+  -$field_title = humanize($field)
+  -if($data['type']=='subsection')
+    -event('superform_section', array_merge(array('indent'=>$current_indent+3, 'section_name'=>$field, 'fields'=>$data['fields'], 'obj'=>$obj, 'vars'=>$vars)))
+  -else
+    -$id = "id_".uniqid();
+    -extract($vars)
+    -$section_params = array_merge(array('field'=>$field, 'data'=>$data, 'obj'=>$obj, 'id'=>$id), $vars)
+    %tr.field
+      %th
+        %label
+          -for($i=0;$i<$current_indent;$i++)
+            &nbsp;
+          -if(isset($data['label']))
+            +$data['label']
+          -else
+            =se(humanize($field))
+        -if(array_key_exists('help', $data))
+          -render('superform_help_button', $section_params)
+      %td
+        -if(array_key_exists('help', $data))
+          -if($data['help'] === true) $data['help'] = array()
+          -render('superform_help_content', $section_params)
+        -if($data['readonly'])
+          +$obj->$field
+        -else
+          -event("{$data['type']}_field", $section_params)
+        :js
+          $(document).ready( function() {
+            e = $('#<?=$id?>');
+            <? if(!$data['enabled']):?>
+              e.attr('disabled', true); 
+            <? endif; ?>  
+          });      
+        -if(array_key_exists($field, $obj->errors))
+          %span{:class=>'error_message'}
+            +$obj->errors[$field]
+        -if(array_key_exists('info_page', $data))
+          %a{:href=>view_page_url($data['info_page']), :target=>"_blank"}
+            =se("view {$data['info_page']}")
+        -if(array_key_exists('content_before', $data))
+          =$data['content_before']
+-se_namespace();
